@@ -1,6 +1,19 @@
-Tue Jul 12 10:25:36 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectOpen Line: 100 ErrorCode: -1 Communication error
-Tue Jul 12 10:25:36 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectReset Line: 113 ErrorCode:-5 Invalid device handler
-Tue Jul 12 10:25:36 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectGetInfo Line: 124 ErrorCode:-5 Invalid device handler
-File: ./SourceCode/DigitizerObject.cpp, Function PrintBoardInfo, Line: 183, Error: can't print board info. Use DigitizerObject::DigitizerObjectgetinfo first. Perhaps you have not open the digitizer?
-Tue Jul 12 10:25:37 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectSWStopAcquisition Line: 442 ErrorCode:-5 Invalid device handler
-Tue Jul 12 10:25:37 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectClose Line: 392 ErrorCode:-5 Invalid device handler
+Tue Jul 12 16:23:47 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectOpen Line: 112 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:23:47 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectReset Line: 125 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:23:47 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectGetInfo Line: 136 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:23:48 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectReset Line: 125 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:23:48 2016 File: ./SourceCode/DigitizerObjectGeneric.cpp Function: DigitizerObjectGenericSetRecordLength Line: 211 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:23:48 2016 File: ./SourceCode/DigitizerObjectGeneric.cpp Function: DigitizerObjectGenericSetMaxNumEventsBLT Line: 221 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:23:48 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectSetAcquisitionMode Line: 392 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:23:48 2016 File: ./SourceCode/DigitizerObjectGeneric.cpp Function: DigitizerObjectGenericSetExtTriggerInputMode Line: 260 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:23:48 2016 File: ./SourceCode/DigitizerObjectGeneric.cpp Function: DigitizerObjectGenericSetFastTriggerDigitizing Line: 586 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:23:48 2016 File: ./SourceCode/DigitizerObjectGeneric.cpp Function: DigitizerObjectGenericSetFastTriggerDigitizing Line: 595 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:23:48 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectGetDRS4SamplingFrequency Line: 332 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:23:48 2016 File: ./SourceCode/DigitizerObjectGeneric.cpp Function: DigitizerObjectSetAutomaticCorrectionX742 Line: 322 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:23:48 2016 File: ./SourceCode/DigitizerObjectGeneric.cpp Function: DigitizerObjectSetAutomaticCorrectionX742 Line: 324 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:23:48 2016 File: ./SourceCode/DigitizerObjectGeneric.cpp Function: DigitizerObjectSetAutomaticCorrectionX742 Line: 326 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:23:57 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectSWStartAcquisition Line: 442 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:24:06 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectSWStopAcquisition Line: 454 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:24:12 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectSWStartAcquisition Line: 442 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:24:22 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectSWStopAcquisition Line: 454 ErrorCode: 0 Operation completed successfully
+Tue Jul 12 16:24:22 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectClose Line: 404 ErrorCode: 0 Operation completed successfully

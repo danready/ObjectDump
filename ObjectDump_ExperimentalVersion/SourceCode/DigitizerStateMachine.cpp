@@ -440,7 +440,7 @@ DigitizerStateMachine::DigitizerStateMachineRawDataInit ()
 
   for (i = 0; i < VISUALIZATIONQUEUE; i++)
     {
-	  circular_buffer_preprocessing[i].RawDataDel ();
+	  circular_buffer_visualization[i].RawDataDel ();
       circular_buffer_visualization[i].RawDataSet (digitizer);
     }
 
