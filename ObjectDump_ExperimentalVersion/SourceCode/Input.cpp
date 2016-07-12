@@ -66,7 +66,7 @@ Input::Producer ()
 	  input_buffer_private[i] = '\0';
 	}
 
-      fgets (input_buffer_private, 99, stdin);	//getting the input from stdin
+      fgets (input_buffer_private, STANDARDBUFFERLIMIT, stdin);	//getting the input from stdin
 
       for (i = 0; i < STANDARDBUFFERLIMIT; i++)
 	{

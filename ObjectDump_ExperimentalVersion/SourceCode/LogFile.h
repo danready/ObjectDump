@@ -24,6 +24,10 @@
 #define LOGFILE_H
 
 #include <stdio.h>
+#include <thread>
+#include <mutex>
+
+using std::mutex;
 
 class LogFile
 {
@@ -104,6 +108,17 @@ public:
   * @brief The LogFileMessageOff method sets to 0 the flag attribute disallowing the object to print the message "Some error occurred".
   */
   void LogFileMessageOff ();
+
+  /**
+  * @brief The mtx_constructor mutex avoids race conditions in the object construction.
+  */
+  static mutex mtx_constructor;
+  
+  /**
+  * @brief The mtx_output mutex avoids race conditions inside the methods of the object.
+  */    
+  mutex mtx_output;
+
 };
 
 #endif

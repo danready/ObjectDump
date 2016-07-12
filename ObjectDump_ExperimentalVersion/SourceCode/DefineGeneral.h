@@ -19,6 +19,9 @@
 #ifndef DEFINEGENERAL_H
 #define DEFINEGENERAL_H
 
+#define SERVERIP "127.0.0.1"
+#define SERVERPORT 1111
+
 #define STANDARDBUFFERLIMIT 1000
 
 ///The dimension of the rawdata thread queue.

@@ -28,7 +28,7 @@ static int32_t getNumberOfBits(uint8_t byte) {
   float Tsamp;
   float vcorr;
   uint16_t st_ind=0;
- uint32_t freq;
+  uint32_t freq;
   float wave_tmp[1024];
  
   freq = (datain[0] >> 16 ) & 0x3;
@@ -44,7 +44,7 @@ static int32_t getNumberOfBits(uint8_t byte) {
   Tsamp =(float)((1.0/5000.0)*1000.0);
   break;
   }
-  dataout->Frequency=freq;
+  dataout->Frequency=static_cast<CAEN_DGTZ_DRS4Frequency_t>(freq);
   st_ind =(uint16_t)((datain[0]>>20)& 0x3FF);
   size1 = datain[0]& 0xFFF;
   if ((trg = (datain[0]>>12)& 0x1) == 1)

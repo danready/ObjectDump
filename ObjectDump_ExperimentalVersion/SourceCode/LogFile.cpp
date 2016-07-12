@@ -20,23 +20,32 @@
 #include "LogFile.h"
 #include "DefineGeneral.h"
 #include "OutputModule.h"
-#include<sys/socket.h>
-#include<arpa/inet.h>
-#include<unistd.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <thread>
+#include <mutex>
 
+using std::mutex;
 
 LogFile *
   LogFile::log_file_pInstance = NULL;
 
+mutex LogFile::mtx_constructor;
 
 LogFile *
 LogFile::Instance ()
 {
+	
+  mtx_constructor.lock();		
+	
   if (!log_file_pInstance)	// Only allow one instance of class to be generated.
     log_file_pInstance = new LogFile ();
+
+  mtx_constructor.unlock();  
 
   return log_file_pInstance;
 }
@@ -62,6 +71,7 @@ flag = 1;
 void
 LogFile::LogFileSet (const char *log_file_arg)
 {
+  mtx_output.lock(); 	
 
   flag = 0;
 
@@ -83,16 +93,23 @@ LogFile::LogFileSet (const char *log_file_arg)
       output_module->Output("Accessing log file...\n");
       can_write = 1;
     }
+    
+  mtx_output.unlock();    
+    
 }				//void LogFile::LogFileSet(const char * log_file_arg)
 
 
 void
 LogFile::LogFileWriteString (const char *string)
 {
+  mtx_output.lock();
+  
   if (can_write)
     {
       fprintf (log_file_punt, string);
     }
+  
+  mtx_output.unlock();    
 }
 
 
@@ -100,6 +117,8 @@ void
 LogFile::LogFileWrite (CAEN_DGTZ_ErrorCode ret_arg, const char *file,
 		       const char *func, int line)
 {
+  mtx_output.lock(); 		
+	
   OutputModule *output_module;
   output_module = OutputModule::Instance ();
 
@@ -114,12 +133,15 @@ LogFile::LogFileWrite (CAEN_DGTZ_ErrorCode ret_arg, const char *file,
         flag = 0;
 	}
 
+  mtx_output.unlock();
 }  //void LogFile::LogFileWrite(CAEN_DGTZ_ErrorCode ret_arg, const char *file, const char *func, int line)
 
 
 void
 LogFile::LogFileRead ()
 {
+  mtx_output.lock(); 	
+	
   OutputModule *output_module;
   output_module = OutputModule::Instance ();
 
@@ -164,5 +186,7 @@ LogFile::LogFileRead ()
 	}
       fclose (read_log);	// N.B. la fclose deve stare dentro senno' capita una segmentation fault!!!
     }   // if (read_log != NULL)
+
+  mtx_output.unlock(); 	
 
 }   //void LogFile::LogFileRead()

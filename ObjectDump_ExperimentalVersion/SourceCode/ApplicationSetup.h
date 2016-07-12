@@ -27,6 +27,11 @@
 #ifndef APPLICATIONSETUP_H
 #define APPLICATIONSETUP_H
 
+#include <thread>
+#include <mutex>
+
+using std::mutex;
+
 class ApplicationSetup
 {
 private:
@@ -153,6 +158,17 @@ public:
    * @return void
    */
   void FetchInputMode (const char *application_setup_input_mode);
+  
+  /**
+  * @brief The mtx_constructor mutex avoids race conditions in the object construction.
+  */
+  static mutex mtx_constructor;
+  
+  /**
+  * @brief The mtx_output mutex avoids race conditions inside the methods of the object.
+  */    
+  mutex mtx_output;    
+  
 };
 
 #endif

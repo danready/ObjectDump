@@ -53,7 +53,7 @@ Per lanciare il programma occorre aggiungere l'opzione -i serveraddress dopo il 
 char *
 FindPointer (char *yytext)
 {
-  printf("Lunghezza: %d \n ", strlen(yytext));
+  printf("Lunghezza: %d \n ", (int)strlen(yytext));
   int i = 0;
   char *punt;
   while (yytext[i] != ' ' && yytext[i] != '\t' && i<strlen(yytext)-1)
@@ -367,7 +367,7 @@ main (int argc, char **argv)
   bzero (&servaddr, sizeof (servaddr));
   servaddr.sin_family = AF_INET;
   servaddr.sin_addr.s_addr = inet_addr (server_address);
-  servaddr.sin_port = htons (1111);
+  servaddr.sin_port = htons (SERVERPORT);
 
   fprintf(stdout, "Welcome to objectDump tcp service, press help for getting the available command list\n");
 

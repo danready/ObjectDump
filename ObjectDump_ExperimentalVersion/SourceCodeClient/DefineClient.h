@@ -16,8 +16,13 @@
 * @author Daniele Berto
 */
 
+#ifndef DEFINECLIENT_H
+#define DEFINECLIENT_H
+
 ///The dimension of the buffer being sent to the server.
 #define STANDARDBUFFERLIMIT 1000
+
+#define SERVERPORT 1111
 
 #define INIT 1
 #define SETUP 2
@@ -43,3 +48,5 @@
 #define READREGISTER 25
 #define PRINTFILES 28
 #define STATUS 30
+
+#endif

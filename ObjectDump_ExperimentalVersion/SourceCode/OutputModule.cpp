@@ -146,7 +146,7 @@ OutputModule::TcpUserArraySendStdOut ()
 	  if (sockid_array[i] > -1
 	      && sockid_array[i] == output_module_sockid)
 	    {
-	      send (sockid_array[i], buffer, STANDARDBUFFERLIMIT, 0);	//usleep(5000); 
+	      send (sockid_array[i], buffer, STANDARDBUFFERLIMIT, MSG_NOSIGNAL);	//usleep(5000); 
 	    }	//if(sockid_array[i]>-1)
 	}   //for(i=0; i<100; i++)
     }

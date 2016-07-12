@@ -67,7 +67,7 @@ RawData & RawData::operator= (const RawData & p)
       buffer = NULL;
       buffer = (char *) malloc (size);
       for (i = 0; i < p.bsize; i++)
-	buffer[i] = p.buffer[i];
+		buffer[i] = p.buffer[i];
       imset = p.imset;
       handle = p.handle;
       bsize = p.bsize;
@@ -103,8 +103,8 @@ RawData::RawDataSet (DigitizerObjectGeneric digitizer_arg)
 void
 RawData::RawDataDel ()
 {
-  //ret = CAEN_DGTZ_FreeReadoutBuffer (&buffer);
-  free (buffer);
+  CAEN_DGTZ_FreeReadoutBuffer (&buffer);
+  //free (buffer);
   buffer = NULL;
   //ret_error.digitizer_error_object_print_error (ret);
 }

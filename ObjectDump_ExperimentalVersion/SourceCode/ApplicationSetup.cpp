@@ -27,6 +27,10 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <thread>
+#include <mutex>
+
+using std::mutex;
 
 /*
 Implementazione standard dei metodi per implementare il singleton design pattern
@@ -34,11 +38,17 @@ Implementazione standard dei metodi per implementare il singleton design pattern
 ApplicationSetup *
   ApplicationSetup::application_setup_pInstance = NULL;
 
+mutex ApplicationSetup::mtx_constructor;
+
 ApplicationSetup *
 ApplicationSetup::Instance ()
 {
+  mtx_constructor.lock();
+	
   if (!application_setup_pInstance)   // Only allow one instance of class to be generated.
     application_setup_pInstance = new ApplicationSetup ();
+
+  mtx_constructor.unlock();
 
   return application_setup_pInstance;
 }
@@ -77,6 +87,8 @@ ApplicationSetup::ApplicationSetup ()
 void
 ApplicationSetup::ApplicationSetupSet (int argc_arg, char **argv_arg)
 {
+  mtx_output.lock();	
+	
   int i;
   argc = argc_arg;
   argv = (char **) malloc (argc * sizeof (char *));
@@ -87,12 +99,16 @@ ApplicationSetup::ApplicationSetupSet (int argc_arg, char **argv_arg)
     }
   ApplicationSetup::ArgumentsParsing ();
   ApplicationSetup::FetchInputMode (application_setup_input_mode);
+  
+  mtx_output.unlock();  
 }
 
 
 int
 ApplicationSetup:: ApplicationSetupDataFileModify (const char *application_setup_data_file_path_arg)
 {
+  mtx_output.lock();	
+	
   free ((void *) application_setup_data_file_path);
   application_setup_data_file_path = NULL;
   application_setup_data_file_path = (char *) malloc (strlen (application_setup_data_file_path_arg) + 1);
@@ -113,6 +129,8 @@ ApplicationSetup:: ApplicationSetupDataFileModify (const char *application_setup
   	fclose (application_setup_data_file_size_punt);
 
   application_setup_data_file_size_punt = fopen (application_setup_data_file_size_path, "a");
+  
+  mtx_output.unlock();  
 }
 
 

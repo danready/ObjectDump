@@ -147,8 +147,14 @@ public:
   */
   void OutputFlex(const char * string, int length);
   
+  /**
+  * @brief The mtx_constructor mutex avoids race conditions in the object construction.
+  */
   static mutex mtx_constructor;
   
+  /**
+  * @brief The mtx_output mutex avoids race conditions inside the methods of the object.
+  */    
   mutex mtx_output;  
   
 };

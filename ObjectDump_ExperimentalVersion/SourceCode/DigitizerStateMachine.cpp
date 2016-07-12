@@ -370,40 +370,50 @@ DigitizerStateMachine::DigitizerStateMachineInit (const char *conf_file)
 void
 DigitizerStateMachine::DigitizerStateMachineSetup (const char *conf_file)
 {
-  int data;
-  digitizer.DigitizerObjectReset ();
-  digitizer.DigitizerObjectSetConfigStructureSetup (conf_file);
-  digitizer.DigitizerObjectGenericSetRecordLength ();
-  digitizer.DigitizerObjectGenericSetMaxNumEventsBLT ();
-  digitizer.DigitizerObjectSetAcquisitionMode (CAEN_DGTZ_SW_CONTROLLED);
-  digitizer.DigitizerObjectGenericSetExtTriggerInputMode ();
-  digitizer.DigitizerObjectGenericSetEnableMask ();
-  digitizer.DigitizerObjectGenericSetDRS4SamplingFrequency ();
-  digitizer.DigitizerObjectGenericSetPostTriggerSize ();
-  digitizer.DigitizerObjectGenericSetChannelSelfTriggerThreshold ();
-  digitizer.DigitizerObjectGenericSetIOLevel ();
-  digitizer.DigitizerObjectGenericSetDCOffset ();
-  digitizer.DigitizerObjectGenericSetSelfTrigger ();
-  digitizer.DigitizerObjectGenericSetFastTriggerDigitizing ();
-  digitizer.DigitizerObjectGenericSetDecimationFactor ();
-  digitizer.DigitizerObjectGenericSetDesMode ();
-  digitizer.DigitizerObjectGenericSetTestPattern ();
-  digitizer.DigitizerObjectGenericSetAllInformations ();
-////////////
-  digitizer.DigitizerObjectSetAutomaticCorrectionX742 ();
-////////////
+	
+if (imstarted == 0)
+{	
+	  int data;
+	  digitizer.DigitizerObjectReset ();
+	  digitizer.DigitizerObjectSetConfigStructureSetup (conf_file);
+	  digitizer.DigitizerObjectGenericSetRecordLength ();
+	  digitizer.DigitizerObjectGenericSetMaxNumEventsBLT ();
+	  digitizer.DigitizerObjectSetAcquisitionMode (CAEN_DGTZ_SW_CONTROLLED);
+	  digitizer.DigitizerObjectGenericSetExtTriggerInputMode ();
+	  digitizer.DigitizerObjectGenericSetEnableMask ();
+	  digitizer.DigitizerObjectGenericSetDRS4SamplingFrequency ();
+	  digitizer.DigitizerObjectGenericSetPostTriggerSize ();
+	  digitizer.DigitizerObjectGenericSetChannelSelfTriggerThreshold ();
+	  digitizer.DigitizerObjectGenericSetIOLevel ();
+	  digitizer.DigitizerObjectGenericSetDCOffset ();
+	  digitizer.DigitizerObjectGenericSetSelfTrigger ();
+	  digitizer.DigitizerObjectGenericSetFastTriggerDigitizing ();
+	  digitizer.DigitizerObjectGenericSetDecimationFactor ();
+	  digitizer.DigitizerObjectGenericSetDesMode ();
+	  digitizer.DigitizerObjectGenericSetTestPattern ();
+	  digitizer.DigitizerObjectGenericSetAllInformations ();
+	////////////
+	  digitizer.DigitizerObjectSetAutomaticCorrectionX742 ();
+	////////////
 
-  //write register
-  for(int i = 0; i < MAXREGISTERS; i++){
-      if(digitizer.internal_config.registers[i].address == -1) break;
-      digitizer.DigitizerObjectWriteRegister(digitizer.internal_config.registers[i].address,
-                                             digitizer.internal_config.registers[i].data);
-  }
-  
+	  //write register
+	  for(int i = 0; i < MAXREGISTERS; i++){
+		  if(digitizer.internal_config.registers[i].address == -1) break;
+		  digitizer.DigitizerObjectWriteRegister(digitizer.internal_config.registers[i].address,
+												 digitizer.internal_config.registers[i].data);
+	  }
+	  
 
-CAEN_DGTZ_SetInterruptConfig( digitizer.handle, CAEN_DGTZ_ENABLE,
-                  1,0xAAAA ,1, CAEN_DGTZ_IRQ_MODE_ROAK);
+	CAEN_DGTZ_SetInterruptConfig( digitizer.handle, CAEN_DGTZ_ENABLE,
+					  1,0xAAAA ,1, CAEN_DGTZ_IRQ_MODE_ROAK);
 
+}
+else
+{
+	  OutputModule *output_module;
+	  output_module = OutputModule::Instance ();	
+	  output_module->Output("DigitizerStateMachine: Error, you have stop acquisition using 'stop' command before setupping the dgitizer. \n");
+}
 
 }
 
@@ -424,11 +434,13 @@ DigitizerStateMachine::DigitizerStateMachineRawDataInit ()
 
   for (i = 0; i < PREPROCESSINGQUEUE; i++)
     {
+	  circular_buffer_preprocessing[i].RawDataDel ();
       circular_buffer_preprocessing[i].RawDataSet (digitizer);
     }
 
   for (i = 0; i < VISUALIZATIONQUEUE; i++)
     {
+	  circular_buffer_preprocessing[i].RawDataDel ();
       circular_buffer_visualization[i].RawDataSet (digitizer);
     }
 

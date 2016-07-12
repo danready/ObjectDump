@@ -35,14 +35,17 @@
 #include "OutputModule.h"
 #include <pthread.h>
 #include <stdio.h>
-#include<string.h>
-#include<stdlib.h>
-#include<sys/socket.h>
-#include<arpa/inet.h>
-#include<unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
+
+#include <netinet/in.h>
+#include <netinet/tcp.h>
 
 using namespace std;
 
@@ -61,8 +64,8 @@ CommunicationObject::Main ()
 
   /*Inizializzo la struttura sockaddr_in */
   server.sin_family = AF_INET;
-  server.sin_addr.s_addr = INADDR_ANY;
-  server.sin_port = htons (1111);
+  server.sin_addr.s_addr = inet_addr(SERVERIP);
+  server.sin_port = htons (SERVERPORT);
 
   /*Effettuo il bind */
   bind (socket_desc, (struct sockaddr *) &server, sizeof (server));
@@ -93,8 +96,11 @@ CommunicationObject::Main ()
 	  output_module->OutputModuleSockidOn(client_sock);
 	  output_module->TcpUserArrayInsert (client_sock);
 	  output_module->Output("Comunicazione col server stabilita\n");
+	  
 	  worker_thread = new thread (&CommunicationObject::Worker, this,
 			  (void *) &client_sock);
+			  
+	  worker_thread->detach();
 	}
 
     }				// while go
@@ -118,11 +124,12 @@ CommunicationObject::Worker (void *socket_desc)
   while (go)
     {
       bzero (buffer, STANDARDBUFFERLIMIT);
-      if ((read_size = recv (sock, buffer, STANDARDBUFFERLIMIT, 0)) <= 0)
+      if ((read_size = recv (sock, buffer, STANDARDBUFFERLIMIT, MSG_NOSIGNAL)) <= 0)
 	{
 	  //fprintf (stderr, "Comunicazione con il client %d interrotta\nobjectDump>",
 	  //   sock);
 	  output_module->TcpUserArrayDelete (sock);
+	  return;
 	}
 
       unique_lock<mutex> ReservedKeyBoardInputAreaHandle(ReservedKeyBoardInputArea);
