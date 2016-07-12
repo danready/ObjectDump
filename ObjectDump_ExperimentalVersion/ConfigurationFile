@@ -93,7 +93,7 @@ GNUPLOT_PATH gnuplot
 #0---> 5 Ghz (valore di default)1---> 2.5 Ghz
 #2---> 1 Ghz.
 #Esempio: 
-#DRS4_FREQUENCY 1
+DRS4_FREQUENCY 2
 
 
 #GROUP_ENABLE_MASK groupenablemask
