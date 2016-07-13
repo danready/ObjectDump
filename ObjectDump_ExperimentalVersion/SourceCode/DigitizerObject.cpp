@@ -29,133 +29,132 @@
 
 DigitizerObject::DigitizerObject (const char *config_file)
 {
-  if (AnalizzaInit (&internal_config, config_file))
-    logfile->
-      LogFileWriteString
-      ("Warning: can't create DigitizerObject correctly. Configuration file does't exists\n");
-  if (AnalizzaSetup (&internal_config, config_file))
-    logfile->
-      LogFileWriteString
-      ("Warning: can't create DigitizerObject correctly. Configuration file does't exists\n");
-  set_board_info = 0;
-  logfile = LogFile::Instance ();
+	if (AnalizzaInit (&internal_config, config_file))
+		logfile->
+		LogFileWriteString
+		("Warning: can't create DigitizerObject correctly. Configuration file does't exists\n");
+	if (AnalizzaSetup (&internal_config, config_file))
+		logfile->
+		LogFileWriteString
+		("Warning: can't create DigitizerObject correctly. Configuration file does't exists\n");
+	set_board_info = 0;
+	logfile = LogFile::Instance ();
 }
 
 DigitizerObject::DigitizerObject (ConfObject config)
 {
-  internal_config = config;
-  set_board_info = 0;
-  logfile = LogFile::Instance ();
+	internal_config = config;
+	set_board_info = 0;
+	logfile = LogFile::Instance ();
 }
 
 void
 DigitizerObject::
 DigitizerObjectSetConfigStructureConfObject (ConfObject config)
 {
-  internal_config = config;
-  logfile = LogFile::Instance ();
+	internal_config = config;
+	logfile = LogFile::Instance ();
 }
 
 DigitizerObject::DigitizerObject ()
 {
-  set_board_info = 0;
-  logfile = LogFile::Instance ();
+	set_board_info = 0;
+	logfile = LogFile::Instance ();
 }
 
 void
 DigitizerObject::
 DigitizerObjectSetConfigStructureInit (const char *config_file)
 {
-  if (AnalizzaInit (&internal_config, config_file))
-    logfile->
-      LogFileWriteString
-      ("Warning: can't create DigitizerObject correctly. Configuration file does't exists\n");
+	if (AnalizzaInit (&internal_config, config_file))
+		logfile->
+		LogFileWriteString
+		("Warning: can't create DigitizerObject correctly. Configuration file does't exists\n");
 }
 
 void
 DigitizerObject::
 DigitizerObjectSetConfigStructureSetup (const char *config_file)
 {
-  if (AnalizzaSetup (&internal_config, config_file))
-    logfile->
-      LogFileWriteString
-      ("Warning: can't create DigitizerObject correctly. Configuration file does't exists\n");
+	if (AnalizzaSetup (&internal_config, config_file))
+		logfile->
+		LogFileWriteString
+		("Warning: can't create DigitizerObject correctly. Configuration file does't exists\n");
 }
 
 int
 DigitizerObject::DigitizerObjectOpen ()
 {
+	char stringa[STANDARDBUFFERLIMIT];
+	bzero (stringa, STANDARDBUFFERLIMIT);
 
-  char stringa[STANDARDBUFFERLIMIT];
-  bzero (stringa, STANDARDBUFFERLIMIT);
+	CAEN_DGTZ_ConnectionType Connection;
 
-  CAEN_DGTZ_ConnectionType Connection;
+	if (internal_config.LinkType == 0)
+		Connection = CAEN_DGTZ_USB;
+	else if (internal_config.LinkType == 1)
+		Connection = CAEN_DGTZ_OpticalLink;
+	else
+	{
+		snprintf (stringa, STANDARDBUFFERLIMIT,
+			"%s %d Configuration structure invalid: LinkType %d field inconsistent\n",
+			__FILE__, __LINE__, internal_config.LinkType);
+		logfile->LogFileWriteString (stringa);
+		return 1;
+	}
 
-  if (internal_config.LinkType == 0)
-    Connection = CAEN_DGTZ_USB;
-  else if (internal_config.LinkType == 1)
-    Connection = CAEN_DGTZ_OpticalLink;
-  else
-    {
-      snprintf (stringa, STANDARDBUFFERLIMIT,
-		"%s %d Configuration structure invalid: LinkType %d field inconsistent\n",
-		__FILE__, __LINE__, internal_config.LinkType);
-      logfile->LogFileWriteString (stringa);
-      return 1;
-    }
+	ret =
+	CAEN_DGTZ_OpenDigitizer (Connection, internal_config.LinkNumber,
+	internal_config.ConetNode,
+	internal_config.VMEBaseAddress, &handle);
+	//ret_error.DigitizerErrorObjectDebugging(ret, __FILE__, __func__, __LINE__);
+	logfile->LogFileWrite (ret, __FILE__, __func__, __LINE__);
+	//ret_error.DigitizerErrorObjectPrintError (ret);
 
-  ret =
-    CAEN_DGTZ_OpenDigitizer (Connection, internal_config.LinkNumber,
-			     internal_config.ConetNode,
-			     internal_config.VMEBaseAddress, &handle);
-  //ret_error.DigitizerErrorObjectDebugging(ret, __FILE__, __func__, __LINE__);
-  logfile->LogFileWrite (ret, __FILE__, __func__, __LINE__);
-  //ret_error.DigitizerErrorObjectPrintError (ret);
-
-  return 0;
+	return 0;
 }
 
 int
 DigitizerObject::DigitizerObjectReset ()
 {
-  ret = CAEN_DGTZ_Reset (handle);
-  //ret_error.digitizer_error_object_debugging(ret, __FILE__, __LINE__);
-  //ret_error.DigitizerErrorObjectPrintError (ret);
-  //ret_error.DigitizerErrorObjectDebugging(ret, __FILE__, __func__, __LINE__);
-  logfile->LogFileWrite (ret, __FILE__, __func__, __LINE__);
-  return 0;
+	ret = CAEN_DGTZ_Reset (handle);
+	//ret_error.digitizer_error_object_debugging(ret, __FILE__, __LINE__);
+	//ret_error.DigitizerErrorObjectPrintError (ret);
+	//ret_error.DigitizerErrorObjectDebugging(ret, __FILE__, __func__, __LINE__);
+	logfile->LogFileWrite (ret, __FILE__, __func__, __LINE__);
+	return 0;
 }
 
 int
 DigitizerObject::DigitizerObjectGetInfo ()
 {
-  ret = CAEN_DGTZ_GetInfo (handle, &BoardInfo);
-  //ret_error.digitizer_error_object_debugging(ret, __FILE__, __LINE__);
-  //ret_error.DigitizerErrorObjectPrintError (ret);
-  //ret_error.DigitizerErrorObjectDebugging(ret, __FILE__, __func__, __LINE__);
-  logfile->LogFileWrite (ret, __FILE__, __func__, __LINE__);
-  if (ret == CAEN_DGTZ_Success)
-    set_board_info = 1;
-  return 0;
+	ret = CAEN_DGTZ_GetInfo (handle, &BoardInfo);
+	//ret_error.digitizer_error_object_debugging(ret, __FILE__, __LINE__);
+	//ret_error.DigitizerErrorObjectPrintError (ret);
+	//ret_error.DigitizerErrorObjectDebugging(ret, __FILE__, __func__, __LINE__);
+	logfile->LogFileWrite (ret, __FILE__, __func__, __LINE__);
+	if (ret == CAEN_DGTZ_Success)
+		set_board_info = 1;
+	return 0;
 }
 
 int
 DigitizerObject::GetFamilyCode(int * FamilyCode)
 {
 
-char stringa[STANDARDBUFFERLIMIT];
+	char stringa[STANDARDBUFFERLIMIT];
 
-  if (set_board_info == 0)
-    {
-      bzero (stringa, STANDARDBUFFERLIMIT);
-      snprintf (stringa, STANDARDBUFFERLIMIT,
-		"File: %s, Function %s, Line: %d, Error: can't print board info. Use DigitizerObject::DigitizerObjectgetinfo first. Perhaps you have not open the digitizer?\n",
-		__FILE__, __func__, __LINE__);
-      logfile->LogFileWriteString (stringa);
-      return 1;
-    }
+	if (set_board_info == 0)
+	{
+		bzero (stringa, STANDARDBUFFERLIMIT);
+		snprintf (stringa, STANDARDBUFFERLIMIT,
+			"File: %s, Function %s, Line: %d, Error: can't print board info. Use DigitizerObject::DigitizerObjectgetinfo first. Perhaps you have not open the digitizer?\n",
+			__FILE__, __func__, __LINE__);
+		logfile->LogFileWriteString (stringa);
+		return 1;
+	}
 
-*FamilyCode = BoardInfo.FamilyCode;
+	*FamilyCode = BoardInfo.FamilyCode;
 
 }
 
@@ -163,19 +162,19 @@ int
 DigitizerObject::GetFormFactorCode(int * FormFactor)
 {
 
-char stringa[STANDARDBUFFERLIMIT];
+	char stringa[STANDARDBUFFERLIMIT];
 
-  if (set_board_info == 0)
-    {
-      bzero (stringa, STANDARDBUFFERLIMIT);
-      snprintf (stringa, STANDARDBUFFERLIMIT,
-		"File: %s, Function %s, Line: %d, Error: can't print board info. Use DigitizerObject::DigitizerObjectgetinfo first. Perhaps you have not open the digitizer?\n",
-		__FILE__, __func__, __LINE__);
-      logfile->LogFileWriteString (stringa);
-      return 1;
-    }
+	if (set_board_info == 0)
+	{
+		bzero (stringa, STANDARDBUFFERLIMIT);
+		snprintf (stringa, STANDARDBUFFERLIMIT,
+			"File: %s, Function %s, Line: %d, Error: can't print board info. Use DigitizerObject::DigitizerObjectgetinfo first. Perhaps you have not open the digitizer?\n",
+			__FILE__, __func__, __LINE__);
+		logfile->LogFileWriteString (stringa);
+		return 1;
+	}
 
-*FormFactor = BoardInfo.FormFactor;
+	*FormFactor = BoardInfo.FormFactor;
 
 }
 
@@ -188,14 +187,14 @@ DigitizerObject::PrintBoardInfo ()
   char stringa[STANDARDBUFFERLIMIT];
 
   if (set_board_info == 0)
-    {
-      bzero (stringa, STANDARDBUFFERLIMIT);
-      snprintf (stringa, STANDARDBUFFERLIMIT,
-		"File: %s, Function %s, Line: %d, Error: can't print board info. Use DigitizerObject::DigitizerObjectgetinfo first. Perhaps you have not open the digitizer?\n",
-		__FILE__, __func__, __LINE__);
-      logfile->LogFileWriteString (stringa);
-      return;
-    }
+  {
+    bzero (stringa, STANDARDBUFFERLIMIT);
+    snprintf (stringa, STANDARDBUFFERLIMIT,
+	  "File: %s, Function %s, Line: %d, Error: can't print board info. Use DigitizerObject::DigitizerObjectgetinfo first. Perhaps you have not open the digitizer?\n",
+	  __FILE__, __func__, __LINE__);
+    logfile->LogFileWriteString (stringa);
+    return;
+  }
 
   bzero (stringa, STANDARDBUFFERLIMIT);
   snprintf (stringa, STANDARDBUFFERLIMIT, "Board model: %s\n",

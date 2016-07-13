@@ -87,6 +87,6 @@ main (int argc, char **argv)
       digitizer_flow_control_main.DigitizerFlowControlStart ();
     }
 
-remove(".plot_data.txt");
+  remove(".plot_data.txt");
 
 }

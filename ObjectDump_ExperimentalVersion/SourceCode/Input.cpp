@@ -43,78 +43,74 @@ using namespace std;
 
 Input::Input ()
 {
-  int i;
-  num_mex = 0;
-  go = 1;
-  input_buffer = (char *) malloc (STANDARDBUFFERLIMIT);
-  for (i = 0; i < STANDARDBUFFERLIMIT; i++)
-    input_buffer[i] = '\0';
-  producer_thread = new thread (&Input::Producer, this);
+	int i;
+	num_mex = 0;
+	go = 1;
+	input_buffer = (char *) malloc (STANDARDBUFFERLIMIT);
+	for (i = 0; i < STANDARDBUFFERLIMIT; i++)
+		input_buffer[i] = '\0';
+	producer_thread = new thread (&Input::Producer, this);
 }
 
 void
 Input::Producer ()
 {
-  int i;
-  char input_buffer_private[STANDARDBUFFERLIMIT];
+	int i;
+	char input_buffer_private[STANDARDBUFFERLIMIT];
 
-  //go is set to 1 by the costructor. The finish() method set it to 0.
-  while (go)
-    {
-      for (i = 0; i < STANDARDBUFFERLIMIT; i++)
+	//go is set to 1 by the costructor. The finish() method set it to 0.
+	while (go)
 	{
-	  input_buffer_private[i] = '\0';
+		for (i = 0; i < STANDARDBUFFERLIMIT; i++)
+		{
+			input_buffer_private[i] = '\0';
+		}
+
+		fgets (input_buffer_private, STANDARDBUFFERLIMIT, stdin);	//getting the input from stdin
+
+		for (i = 0; i < STANDARDBUFFERLIMIT; i++)
+		{
+			if (input_buffer_private[i] == '\n')
+				input_buffer_private[i] = '\0';
+		}
+
+		unique_lock<mutex> lk(mutex1);	//assure data consistency
+
+		for (i = 0; i < STANDARDBUFFERLIMIT; i++)
+		{
+			input_buffer[i] = input_buffer_private[i];
+		}
+
+		pthread_mutex_lock (&DigitizerFlowControl::input_flow_mutex);
+		pthread_cond_signal (&DigitizerFlowControl::input_flow_cond);
+		pthread_mutex_unlock (&DigitizerFlowControl::input_flow_mutex);
+
+		num_mex = 1;  // a message is ready
+
+		lk.unlock();
 	}
-
-      fgets (input_buffer_private, STANDARDBUFFERLIMIT, stdin);	//getting the input from stdin
-
-      for (i = 0; i < STANDARDBUFFERLIMIT; i++)
-	{
-	  if (input_buffer_private[i] == '\n')
-	    input_buffer_private[i] = '\0';
-	}
-
-      unique_lock<mutex> lk(mutex1);	//assure data consistency
-
-      for (i = 0; i < STANDARDBUFFERLIMIT; i++)
-	{
-	  input_buffer[i] = input_buffer_private[i];
-	}
-
-      pthread_mutex_lock (&DigitizerFlowControl::input_flow_mutex);
-      pthread_cond_signal (&DigitizerFlowControl::input_flow_cond);
-      pthread_mutex_unlock (&DigitizerFlowControl::input_flow_mutex);
-
-      num_mex = 1;  // a message is ready
-
-      lk.unlock();
-    }
-
-
 }
 
 
 void
 Input::GetInput (char *input_buffer_sending)
 {
-  int i;
-      unique_lock<mutex> lk(mutex1);	//assure data consistency
+	int i;
+	unique_lock<mutex> lk(mutex1);	//assure data consistency
 
-  if (num_mex == 0)	// if no message set the input_buffer_sending to zero
-    {
-      for (i = 0; i < STANDARDBUFFERLIMIT; i++)
-	input_buffer_sending[i] = '\0';
-
-    }
-
-  else		// if there is a message, copy it into input_buffer_sending
-    {
-      for (i = 0; i < STANDARDBUFFERLIMIT; i++)
+	if (num_mex == 0)	// if no message set the input_buffer_sending to zero
 	{
-	  input_buffer_sending[i] = input_buffer[i];
+		for (i = 0; i < STANDARDBUFFERLIMIT; i++)
+			input_buffer_sending[i] = '\0';
 	}
-      num_mex = 0;	//no message ready
-    }
+	else		// if there is a message, copy it into input_buffer_sending
+	{
+		for (i = 0; i < STANDARDBUFFERLIMIT; i++)
+		{
+			input_buffer_sending[i] = input_buffer[i];
+		}
+		num_mex = 0;	//no message ready
+	}
 }
 
 void

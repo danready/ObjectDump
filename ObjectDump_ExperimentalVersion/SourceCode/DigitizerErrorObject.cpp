@@ -20,8 +20,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <CAENDigitizer.h>
-#include<sys/time.h>
-#include<time.h>
+#include <sys/time.h>
+#include <time.h>
 
 void
 DigitizerErrorObject::DigitizerErrorObjectDebugging (CAEN_DGTZ_ErrorCode

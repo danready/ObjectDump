@@ -43,43 +43,43 @@ mutex ApplicationSetup::mtx_constructor;
 ApplicationSetup *
 ApplicationSetup::Instance ()
 {
-  mtx_constructor.lock();
-	
-  if (!application_setup_pInstance)   // Only allow one instance of class to be generated.
-    application_setup_pInstance = new ApplicationSetup ();
+	mtx_constructor.lock();
 
-  mtx_constructor.unlock();
+	if (!application_setup_pInstance)   // Only allow one instance of class to be generated.
+		application_setup_pInstance = new ApplicationSetup ();
 
-  return application_setup_pInstance;
+	mtx_constructor.unlock();
+
+	return application_setup_pInstance;
 }
 
 
 ///Il costruttore (privato) del singleton riempie le varibili contenenti i path dei files usati dal programma e la modalita' di input con valori di default.
 ApplicationSetup::ApplicationSetup ()
 {
-  channel_visualized = 0;
+	channel_visualized = 0;
 
-  imset = 0;
+	imset = 0;
 
-  application_setup_log_file_path = (const char *)malloc ((strlen ("./LogFile") + 1));
+	application_setup_log_file_path = (const char *)malloc ((strlen ("./LogFile") + 1));
 
-  strcpy ((char *) application_setup_log_file_path,"./LogFile");
+	strcpy ((char *) application_setup_log_file_path,"./LogFile");
 
-  application_setup_data_file_path =(const char *) malloc ((strlen ("./RawData/data.txt") + 1));
-  strcpy ((char *) application_setup_data_file_path, "./RawData/data.txt");
+	application_setup_data_file_path =(const char *) malloc ((strlen ("./RawData/data.txt") + 1));
+	strcpy ((char *) application_setup_data_file_path, "./RawData/data.txt");
 
-  application_setup_conf_file_path = (const char *)malloc ((strlen ("./ConfigurationFile") + 1));
-  strcpy ((char *) application_setup_conf_file_path, "./ConfigurationFile");
+	application_setup_conf_file_path = (const char *)malloc ((strlen ("./ConfigurationFile") + 1));
+	strcpy ((char *) application_setup_conf_file_path, "./ConfigurationFile");
 
-  application_setup_input_mode = (const char *) malloc ((strlen ("default") + 1));
-  strcpy ((char *) application_setup_input_mode, "default");
+	application_setup_input_mode = (const char *) malloc ((strlen ("default") + 1));
+	strcpy ((char *) application_setup_input_mode, "default");
 
-  application_setup_data_file_size_path = (const char *) malloc (strlen (application_setup_data_file_path) + 3);
-  strcpy ((char *) application_setup_data_file_size_path, application_setup_data_file_path);
-  strcat ((char *) application_setup_data_file_size_path, "sz");
+	application_setup_data_file_size_path = (const char *) malloc (strlen (application_setup_data_file_path) + 3);
+	strcpy ((char *) application_setup_data_file_size_path, application_setup_data_file_path);
+	strcat ((char *) application_setup_data_file_size_path, "sz");
 
-  application_setup_data_file_punt = fopen (application_setup_data_file_path, "a");
-  application_setup_data_file_size_punt = fopen (application_setup_data_file_size_path, "a");
+	application_setup_data_file_punt = fopen (application_setup_data_file_path, "a");
+	application_setup_data_file_size_punt = fopen (application_setup_data_file_size_path, "a");
 }
 
 
@@ -87,64 +87,64 @@ ApplicationSetup::ApplicationSetup ()
 void
 ApplicationSetup::ApplicationSetupSet (int argc_arg, char **argv_arg)
 {
-  mtx_output.lock();	
-	
-  int i;
-  argc = argc_arg;
-  argv = (char **) malloc (argc * sizeof (char *));
-  for (i = 0; i < argc; i++)
-    {
-      argv[i] = (char *) malloc (sizeof (char) * (strlen (argv_arg[i]) + 1));
-      strcpy (argv[i], argv_arg[i]);
-    }
-  ApplicationSetup::ArgumentsParsing ();
-  ApplicationSetup::FetchInputMode (application_setup_input_mode);
-  
-  mtx_output.unlock();  
+	mtx_output.lock();	
+
+	int i;
+	argc = argc_arg;
+	argv = (char **) malloc (argc * sizeof (char *));
+	for (i = 0; i < argc; i++)
+	{
+		argv[i] = (char *) malloc (sizeof (char) * (strlen (argv_arg[i]) + 1));
+		strcpy (argv[i], argv_arg[i]);
+	}
+	ApplicationSetup::ArgumentsParsing ();
+	ApplicationSetup::FetchInputMode (application_setup_input_mode);
+
+	mtx_output.unlock();  
 }
 
 
 int
 ApplicationSetup:: ApplicationSetupDataFileModify (const char *application_setup_data_file_path_arg)
 {
-  mtx_output.lock();	
-	
-  free ((void *) application_setup_data_file_path);
-  application_setup_data_file_path = NULL;
-  application_setup_data_file_path = (char *) malloc (strlen (application_setup_data_file_path_arg) + 1);
-  strcpy ((char *) application_setup_data_file_path, application_setup_data_file_path_arg);
+	mtx_output.lock();	
 
-  if (application_setup_data_file_punt != NULL)
-  	fclose (application_setup_data_file_punt);
+	free ((void *) application_setup_data_file_path);
+	application_setup_data_file_path = NULL;
+	application_setup_data_file_path = (char *) malloc (strlen (application_setup_data_file_path_arg) + 1);
+	strcpy ((char *) application_setup_data_file_path, application_setup_data_file_path_arg);
 
-  application_setup_data_file_punt = fopen (application_setup_data_file_path, "a");
+	if (application_setup_data_file_punt != NULL)
+		fclose (application_setup_data_file_punt);
 
-  free ((void *) application_setup_data_file_size_path);
-  application_setup_data_file_size_path = NULL;
-  application_setup_data_file_size_path = (char *) malloc (strlen (application_setup_data_file_path_arg) + 3);
-  strcpy ((char *) application_setup_data_file_size_path, application_setup_data_file_path_arg);
-  strcat ((char *) application_setup_data_file_size_path, "sz");
+	application_setup_data_file_punt = fopen (application_setup_data_file_path, "a");
 
-  if (application_setup_data_file_size_punt != NULL)
-  	fclose (application_setup_data_file_size_punt);
+	free ((void *) application_setup_data_file_size_path);
+	application_setup_data_file_size_path = NULL;
+	application_setup_data_file_size_path = (char *) malloc (strlen (application_setup_data_file_path_arg) + 3);
+	strcpy ((char *) application_setup_data_file_size_path, application_setup_data_file_path_arg);
+	strcat ((char *) application_setup_data_file_size_path, "sz");
 
-  application_setup_data_file_size_punt = fopen (application_setup_data_file_size_path, "a");
-  
-  mtx_output.unlock();  
+	if (application_setup_data_file_size_punt != NULL)
+		fclose (application_setup_data_file_size_punt);
+
+	application_setup_data_file_size_punt = fopen (application_setup_data_file_size_path, "a");
+
+	mtx_output.unlock();  
 }
 
 
 FILE *
 ApplicationSetup::ApplicationSetupGetDataFilePunt ()
 {
-  return application_setup_data_file_punt;
+	return application_setup_data_file_punt;
 }
 
 
 FILE *
 ApplicationSetup::ApplicationSetupGetDataFileSizePunt ()
 {
-  return application_setup_data_file_size_punt;
+	return application_setup_data_file_size_punt;
 }
 
 
@@ -152,32 +152,32 @@ void
 ApplicationSetup::FetchInputMode (const char *application_setup_input_mode)
 {
 
-  OutputModule *output_module;
-  output_module = OutputModule::Instance ();
+	OutputModule *output_module;
+	output_module = OutputModule::Instance ();
 
-  if (!strcmp ("user", application_setup_input_mode))
-    {
-      input_mode = 0;
-      output_module->Output("User command mode activated\n");
-    }
+	if (!strcmp ("user", application_setup_input_mode))
+	{
+		input_mode = 0;
+		output_module->Output("User command mode activated\n");
+	}
 
-  else if (!strcmp ("tcp", application_setup_input_mode))
-    {
-      input_mode = 1;
-      output_module->Output("Tcp command mode activated\n");
-    }
+	else if (!strcmp ("tcp", application_setup_input_mode))
+	{
+		input_mode = 1;
+		output_module->Output("Tcp command mode activated\n");
+	}
 
-  else if (!strcmp ("all", application_setup_input_mode))
-    {
-      input_mode = 2;
-      output_module->Output("Tcp and User command mode activated\n");
-    }
+	else if (!strcmp ("all", application_setup_input_mode))
+	{
+		input_mode = 2;
+		output_module->Output("Tcp and User command mode activated\n");
+	}
 
-  else
-    {
-      output_module->Output("Tcp and User command mode activated\n");
-      input_mode = 2;
-    }
+	else
+	{
+		output_module->Output("Tcp and User command mode activated\n");
+		input_mode = 2;
+	}
 }
 
 
@@ -185,37 +185,41 @@ void
 ApplicationSetup::ArgumentsParsing ()
 {
 
-  int c = 0;
+	int c = 0;
 
-  opterr = 0;
+	opterr = 0;
 
-  while ((c = getopt (argc, argv, "f:m:d:l:")) != -1)
-    switch (c)
-      {
-      case 'f':
-	application_setup_conf_file_path =
-	  (char *) malloc (strlen (optarg) + 1);
-	strcpy ((char *) application_setup_conf_file_path, optarg);
-	break;
-      case 'm':
-	application_setup_input_mode = (char *) malloc (strlen (optarg) + 1);
-	strcpy ((char *) application_setup_input_mode, optarg);
-	break;
-      case 'd':
-	ApplicationSetup::ApplicationSetupDataFileModify (optarg);
-	break;
-      case 'l':
-	application_setup_log_file_path =
-	  (char *) malloc (strlen (optarg) + 1);
-	strcpy ((char *) application_setup_log_file_path, optarg);
-	break;
-      case '?':
-	if (optopt == 'f' || optopt == 'm' || optopt == 'd' || optopt == 'l')
-	  fprintf (stderr, "Option -%c requires an argument.\n", optopt);
-	else if (isprint (optopt))
-	  fprintf (stderr, "Unknown option `-%c'.\n", optopt);
-	else
-	  fprintf (stderr, "Unknown option character `\\x%x'.\n", optopt);
-	break;
-      }
+	while ((c = getopt (argc, argv, "f:m:d:l:")) != -1)
+	switch (c)
+	{
+		case 'f':
+		application_setup_conf_file_path =
+		(char *) malloc (strlen (optarg) + 1);
+		strcpy ((char *) application_setup_conf_file_path, optarg);
+		break;
+		
+		case 'm':
+		application_setup_input_mode = (char *) malloc (strlen (optarg) + 1);
+		strcpy ((char *) application_setup_input_mode, optarg);
+		break;
+		
+		case 'd':
+		ApplicationSetup::ApplicationSetupDataFileModify (optarg);
+		break;
+		
+		case 'l':
+		application_setup_log_file_path =
+		(char *) malloc (strlen (optarg) + 1);
+		strcpy ((char *) application_setup_log_file_path, optarg);
+		break;
+		
+		case '?':
+		if (optopt == 'f' || optopt == 'm' || optopt == 'd' || optopt == 'l')
+			fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+		else if (isprint (optopt))
+			fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+		else
+			fprintf (stderr, "Unknown option character `\\x%x'.\n", optopt);
+		break;
+	}
 }

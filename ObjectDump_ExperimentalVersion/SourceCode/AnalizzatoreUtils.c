@@ -98,94 +98,96 @@ OutputRisingFalling (char *yytext)
 int
 OutputNIMTTL (char *yytext)
 {
-  char *punt;
-  punt = FindPointer (yytext);
-  if (reg_matches (punt, "[Nn][Ii][Mm]"))
-    return 0;
-  else if (reg_matches (punt, "[Tt][Tt][Ll]"))
-    return 1;
-  else
-    return -1;
+	char *punt;
+	punt = FindPointer (yytext);
+	if (reg_matches (punt, "[Nn][Ii][Mm]"))
+		return 0;
+	else if (reg_matches (punt, "[Tt][Tt][Ll]"))
+		return 1;
+	else
+		return -1;
 }
 
 int
 YesNoAnswer (char *yytext)
 {
-  char *punt;
-  punt = FindPointer (yytext);
-  if (reg_matches (punt, "[Yy][Ee][Ss]"))
-    return 1;
-  else if (reg_matches (punt, "[Nn][Oo]"))
-    return 0;
-  else
-    return -1;
+	char *punt;
+	punt = FindPointer (yytext);
+	if (reg_matches (punt, "[Yy][Ee][Ss]"))
+		return 1;
+	else if (reg_matches (punt, "[Nn][Oo]"))
+		return 0;
+	else
+		return -1;
 }
 
 int
 GetAcquisitionMode (char *yytext)
 {
-  char *punt;
-  punt = FindPointer (yytext);
-  if (reg_matches
-      (punt, "[aA][cC][qQ][uU][iI][sS][iI][tT][iI][oO][nN]_[oO][nN][lL][yY]"))
-    return 0;
-  else
-    if (reg_matches
+	char *punt;
+	punt = FindPointer (yytext);
+	if (reg_matches
+	(punt, "[aA][cC][qQ][uU][iI][sS][iI][tT][iI][oO][nN]_[oO][nN][lL][yY]"))
+		return 0;
+	else
+	if (reg_matches
 	(punt,
-	 "[aA][cC][qQ][uU][iI][sS][iI][tT][iI][oO][nN]_[aA][nN][dD]_[tT][rR][gG][oO][uU][tT]"))
-    return 1;
-  else if (reg_matches (punt, "[dD][iI][sS][aA][bB][lL][eE][dD]"))
-    return 2;
-  else
-    return -1;
+	"[aA][cC][qQ][uU][iI][sS][iI][tT][iI][oO][nN]_[aA][nN][dD]_[tT][rR][gG][oO][uU][tT]"))
+		return 1;
+	else if (reg_matches (punt, "[dD][iI][sS][aA][bB][lL][eE][dD]"))
+		return 2;
+	else
+		return -1;
 }
 
 void
 GetOpenInformation (char *yytext, ConfObject * mioconfig)
 {
-  char *punt;
-  int Type;
-  int LinkNumber;
-  int NodeNumber;
-  int BaseAddress;
-  punt = FindPointer (yytext);
-  if (reg_matches (punt, "[Uu][Ss][Bb]"))
-    Type = 0;
-  else if (reg_matches (punt, "[Pp][Cc][Ii]"))
-    Type = 1;
-  else
-    Type = -1;
-  LinkNumber = FindIntegerValue (punt);
-  punt = FindPointer (punt);
-  NodeNumber = FindIntegerValue (punt);
-  punt = FindPointer (punt);
-  punt = FindPointer (punt);
-  BaseAddress = strtoul (punt, NULL, 16);
+	char *punt;
+	int Type;
+	int LinkNumber;
+	int NodeNumber;
+	int BaseAddress;
+	punt = FindPointer (yytext);
+	
+	if (reg_matches (punt, "[Uu][Ss][Bb]"))
+		Type = 0;
+	else if (reg_matches (punt, "[Pp][Cc][Ii]"))
+		Type = 1;
+	else
+		Type = -1;
+		
+	LinkNumber = FindIntegerValue (punt);
+	punt = FindPointer (punt);
+	NodeNumber = FindIntegerValue (punt);
+	punt = FindPointer (punt);
+	punt = FindPointer (punt);
+	BaseAddress = strtoul (punt, NULL, 16);
 
-  mioconfig->LinkType = Type;
-  mioconfig->LinkNumber = LinkNumber;
-  mioconfig->ConetNode = NodeNumber;
-  mioconfig->VMEBaseAddress = BaseAddress;
+	mioconfig->LinkType = Type;
+	mioconfig->LinkNumber = LinkNumber;
+	mioconfig->ConetNode = NodeNumber;
+	mioconfig->VMEBaseAddress = BaseAddress;
 
-  //printf ("%d %d %d %d\n", Type, LinkNumber, NodeNumber, BaseAddress);
+	//printf ("%d %d %d %d\n", Type, LinkNumber, NodeNumber, BaseAddress);
 }
 
 void
 GetWriteRegisterInformation (char *yytext, ConfObject * mioconfig)
 {
-  char *punt;
-  int Address;
-  int Data;
-  int Mask;
-  punt = FindPointer (yytext);
-  Address = strtoul (punt, NULL, 16);
-  punt = FindPointer (punt);
-  Data = strtoul (punt, NULL, 16);
-  punt = FindPointer (punt);
-  Mask = strtoul (punt, NULL, 16);
-  mioconfig->Address_register = Address;
-  mioconfig->Data_register = Data;
-  mioconfig->Mask_register = Mask;
+	char *punt;
+	int Address;
+	int Data;
+	int Mask;
+	punt = FindPointer (yytext);
+	Address = strtoul (punt, NULL, 16);
+	punt = FindPointer (punt);
+	Data = strtoul (punt, NULL, 16);
+	punt = FindPointer (punt);
+	Mask = strtoul (punt, NULL, 16);
+	mioconfig->Address_register = Address;
+	mioconfig->Data_register = Data;
+	mioconfig->Mask_register = Mask;
 }
 
 
@@ -194,93 +196,93 @@ GetWriteRegisterInformation (char *yytext, ConfObject * mioconfig)
 void
 ChInformation (char *yytext, ConfObject * mioconfig)
 {
-  char *punt;
-  int mod;
-  int yes_no;
-  int channel;
-  int channel_trigger;
+	char *punt;
+	int mod;
+	int yes_no;
+	int channel;
+	int channel_trigger;
 
 
-  channel = FindIntegerValue (yytext);
+	channel = FindIntegerValue (yytext);
 
 
-  if (channel < MAXCHANNELOBJECT) 
+	if (channel < MAXCHANNELOBJECT) 
 	{
-	  mioconfig->channels[channel].set = 1;
-	  mioconfig->channels[channel].numChannel = channel;
+		mioconfig->channels[channel].set = 1;
+		mioconfig->channels[channel].numChannel = channel;
 
-	  punt = FindPointer (yytext);
-	  punt = FindPointer (punt);
+		punt = FindPointer (yytext);
+		punt = FindPointer (punt);
 
 
-	  if (reg_matches (punt, "[Ee][Nn][Aa][Bb][Ll][Ee]_[iI][nN][pP][uU][tT]"))
-	    mod = 0;
-	  else if (reg_matches (punt, "[dD][cC]_[oO][fF][fF][sS][eE][tT]"))
-	    mod = 1;
-	  else if (reg_matches (punt, "[tT][rR][iI][gG][gG][eE][rR]_[tT][hH][rR][eE][sS][hH][oO][lL][dD]"))
-	    mod = 2;
-	  else if (reg_matches
+		if (reg_matches (punt, "[Ee][Nn][Aa][Bb][Ll][Ee]_[iI][nN][pP][uU][tT]"))
+			mod = 0;
+		else if (reg_matches (punt, "[dD][cC]_[oO][fF][fF][sS][eE][tT]"))
+			mod = 1;
+		else if (reg_matches (punt, "[tT][rR][iI][gG][gG][eE][rR]_[tT][hH][rR][eE][sS][hH][oO][lL][dD]"))
+			mod = 2;
+		else if (reg_matches
 		(punt, "[cC][hH][aA][nN][nN][eE][lL]_[tT][rR][iI][gG][gG][eE][rR]"))
-	    mod = 3;
-	  else
-	    mod = -1;
+			mod = 3;
+		else
+			mod = -1;
 
 
-	  if (mod == 0)
-	    {				//ENABLE_INPUT
-	      punt = FindPointer (punt);
-	      if (reg_matches (punt, "[Yy][Ee][Ss]"))
-		{
-		  yes_no = 1;
-		  mioconfig->channels[channel].enable_input = yes_no;
+		if (mod == 0)
+		{				//ENABLE_INPUT
+			punt = FindPointer (punt);
+			if (reg_matches (punt, "[Yy][Ee][Ss]"))
+			{
+				yes_no = 1;
+				mioconfig->channels[channel].enable_input = yes_no;
+			}
+			else if (reg_matches (punt, "[Nn][Oo]"))
+			{
+				yes_no = 0;
+				mioconfig->channels[channel].enable_input = yes_no;
+			}
 		}
-	      else if (reg_matches (punt, "[Nn][Oo]"))
-		{
-		  yes_no = 0;
-		  mioconfig->channels[channel].enable_input = yes_no;
-		}
-	    }
 
-	  else if (mod == 1)
-	    {				//DC_OFFSET
-	      punt = FindPointer (punt);
-	      int dc_offset = strtoul (punt, NULL, 16);
-	      mioconfig->channels[channel].dc_offset = dc_offset;
-	    }
+		else if (mod == 1)
+		{				//DC_OFFSET
+			punt = FindPointer (punt);
+			int dc_offset = strtoul (punt, NULL, 16);
+			mioconfig->channels[channel].dc_offset = dc_offset;
+		}
 
-	  else if (mod == 2)
-	    {				//TRIGGER_THRESHOLD
-	      punt = FindPointer (punt);
-	      int trigger_threshold = strtoul (punt, NULL, 16);
-	      mioconfig->channels[channel].trigger_threshold = trigger_threshold;
-	      //mioconfig->channels[channel].trigger_threshold;
-	    }
+		else if (mod == 2)
+		{				//TRIGGER_THRESHOLD
+			punt = FindPointer (punt);
+			int trigger_threshold = strtoul (punt, NULL, 16);
+			mioconfig->channels[channel].trigger_threshold = trigger_threshold;
+			//mioconfig->channels[channel].trigger_threshold;
+		}
 
-	  else if (mod == 3)
-	    {				//CHANNEL_TRIGGER
-	      punt = FindPointer (punt);
-	      if (reg_matches
-		  (punt,
-		   "[aA][cC][qQ][uU][iI][sS][iI][tT][iI][oO][nN]_[oO][nN][lL][yY]"))
-		{
-		  channel_trigger = 0;
-		  mioconfig->channels[channel].channel_trigger = channel_trigger;
-		}
-	      else
-		if (reg_matches
-		    (punt,
-		     "[aA][cC][qQ][uU][iI][sS][iI][tT][iI][oO][nN]_[aA][nN][dD]_[tT][rR][gG][oO][uU][tT]"))
-		{
-		  channel_trigger = 1;
-		  mioconfig->channels[channel].channel_trigger = channel_trigger;
-		}
-	      else if (reg_matches (punt, "[dD][iI][sS][aA][bB][lL][eE][dD]"))
-		{
-		  channel_trigger = 2;
-		  mioconfig->channels[channel].channel_trigger = channel_trigger;
-		}
-	    } // else if (mod == 3)
-	  } //if (channel < MAXCHANNELOBJECT) 
+		else if (mod == 3)
+		{				//CHANNEL_TRIGGER
+			punt = FindPointer (punt);
+			if (reg_matches
+			(punt,
+			"[aA][cC][qQ][uU][iI][sS][iI][tT][iI][oO][nN]_[oO][nN][lL][yY]"))
+			{
+				channel_trigger = 0;
+				mioconfig->channels[channel].channel_trigger = channel_trigger;
+			}
+			else
+			if (reg_matches
+			(punt,
+			"[aA][cC][qQ][uU][iI][sS][iI][tT][iI][oO][nN]_[aA][nN][dD]_[tT][rR][gG][oO][uU][tT]"))
+			{
+				channel_trigger = 1;
+				mioconfig->channels[channel].channel_trigger = channel_trigger;
+			}
+			else if (reg_matches (punt, "[dD][iI][sS][aA][bB][lL][eE][dD]"))
+			{
+				channel_trigger = 2;
+				mioconfig->channels[channel].channel_trigger = channel_trigger;
+			}
+		} // else if (mod == 3)
+	} //if (channel < MAXCHANNELOBJECT) 
 }  //END_FUNCTION
 
 //***********************************************
@@ -288,69 +290,69 @@ ChInformation (char *yytext, ConfObject * mioconfig)
 void
 GroupInformation (char *yytext, ConfObject * mioconfig)
 {
-  char *punt;
-  int mod;
-  int yes_no;
-  int group;
-  //int group_mask;
+	char *punt;
+	int mod;
+	int yes_no;
+	int group;
+	//int group_mask;
 
-  group = FindIntegerValue (yytext);
+	group = FindIntegerValue (yytext);
 
-  if (group < MAXGROUPOBJECT)
+	if (group < MAXGROUPOBJECT)
 	{
 
-	  mioconfig->groups[group].set = 1;
-	  mioconfig->groups[group].numGroup = group;
+		mioconfig->groups[group].set = 1;
+		mioconfig->groups[group].numGroup = group;
 
-	  punt = FindPointer (yytext);
-	  punt = FindPointer (punt);
-	  if (reg_matches (punt, "[Ee][Nn][Aa][Bb][Ll][Ee]_[iI][nN][pP][uU][tT]"))
-	    mod = 0;
-	  else if (reg_matches (punt, "[dD][cC]_[oO][fF][fF][sS][eE][tT]"))
-	    mod = 1;
-	  else if (reg_matches (punt, "[tT][rR][iI][gG][gG][eE][rR]_[tT][hH][rR][eE][sS][hH][oO][lL][dD]"))
-	    mod = 2;
-	  else if (reg_matches (punt, "[gG][rR][oO][uU][pP]_[tT][rR][gG]_[eE][nN][aA][bB][lL][eE]_[mM][aA][sS][kK]"))
-	    mod = 3;
-	  else
-	    mod = -1;
+		punt = FindPointer (yytext);
+		punt = FindPointer (punt);
+		if (reg_matches (punt, "[Ee][Nn][Aa][Bb][Ll][Ee]_[iI][nN][pP][uU][tT]"))
+			mod = 0;
+		else if (reg_matches (punt, "[dD][cC]_[oO][fF][fF][sS][eE][tT]"))
+			mod = 1;
+		else if (reg_matches (punt, "[tT][rR][iI][gG][gG][eE][rR]_[tT][hH][rR][eE][sS][hH][oO][lL][dD]"))
+			mod = 2;
+		else if (reg_matches (punt, "[gG][rR][oO][uU][pP]_[tT][rR][gG]_[eE][nN][aA][bB][lL][eE]_[mM][aA][sS][kK]"))
+			mod = 3;
+		else
+			mod = -1;
 
-	  if (mod == 0)
-	    {				//ENABLE_INPUT
-	      punt = FindPointer (punt);
-	      if (reg_matches (punt, "[Yy][Ee][Ss]"))
-		{
-		  yes_no = 1;
-		  mioconfig->groups[group].enable_input = yes_no;
+		if (mod == 0)
+		{				//ENABLE_INPUT
+			punt = FindPointer (punt);
+			if (reg_matches (punt, "[Yy][Ee][Ss]"))
+			{
+				yes_no = 1;
+				mioconfig->groups[group].enable_input = yes_no;
+			}
+			else if (reg_matches (punt, "[Nn][Oo]"))
+			{
+				yes_no = 0;
+				mioconfig->groups[group].enable_input = yes_no;
+			}
 		}
-	      else if (reg_matches (punt, "[Nn][Oo]"))
-		{
-		  yes_no = 0;
-		  mioconfig->groups[group].enable_input = yes_no;
+
+		else if (mod == 1)
+		{				//DC_OFFSET
+			punt = FindPointer (punt);
+			int dc_offset = strtoul (punt, NULL, 16);
+			mioconfig->groups[group].dc_offset = dc_offset;
 		}
-	    }
 
-	  else if (mod == 1)
-	    {				//DC_OFFSET
-	      punt = FindPointer (punt);
-	      int dc_offset = strtoul (punt, NULL, 16);
-	      mioconfig->groups[group].dc_offset = dc_offset;
-	    }
+		else if (mod == 2)
+		{				//TRIGGER_THRESHOLD
+			punt = FindPointer (punt);
+			int trigger_threshold = strtoul (punt, NULL, 16);
+			mioconfig->groups[group].trigger_threshold = trigger_threshold;
+		}
 
-	  else if (mod == 2)
-	    {				//TRIGGER_THRESHOLD
-	      punt = FindPointer (punt);
-	      int trigger_threshold = strtoul (punt, NULL, 16);
-	      mioconfig->groups[group].trigger_threshold = trigger_threshold;
-	    }
-
-	  else if (mod == 3)
-	    {				//GROUP_TRG_ENABLE_MASK
-	      punt = FindPointer (punt);
-	      int group_mask = strtoul (punt, NULL, 16);
-	      mioconfig->groups[group].group_trg_enable_mask = group_mask;
-	    } // else if (mod == 3)
-	  } // if (group < MAXGROUPOBJECT)
+		else if (mod == 3)
+		{				//GROUP_TRG_ENABLE_MASK
+			punt = FindPointer (punt);
+			int group_mask = strtoul (punt, NULL, 16);
+			mioconfig->groups[group].group_trg_enable_mask = group_mask;
+		} // else if (mod == 3)
+	} // if (group < MAXGROUPOBJECT)
 }  //END_FUNCTION
 
 //************************************************
@@ -358,53 +360,52 @@ GroupInformation (char *yytext, ConfObject * mioconfig)
 void
 AllInformation (char *yytext, ConfObject * mioconfig)
 {
-  char *punt;
-  int mod;
-  int yes_no;
-  punt = FindPointer (yytext);
-  if (reg_matches (punt, "[Ee][Nn][Aa][Bb][Ll][Ee]_[iI][nN][pP][uU][tT]"))
-    mod = 0;
-  else if (reg_matches (punt, "[dD][cC]_[oO][fF][fF][sS][eE][tT]"))
-    mod = 1;
-  else
-    if (reg_matches
+	char *punt;
+	int mod;
+	int yes_no;
+	punt = FindPointer (yytext);
+	if (reg_matches (punt, "[Ee][Nn][Aa][Bb][Ll][Ee]_[iI][nN][pP][uU][tT]"))
+		mod = 0;
+	else if (reg_matches (punt, "[dD][cC]_[oO][fF][fF][sS][eE][tT]"))
+		mod = 1;
+	else
+	if (reg_matches
 	(punt,
-	 "[tT][rR][iI][gG][gG][eE][rR]_[tT][hH][rR][eE][sS][hH][oO][lL][dD]"))
-    mod = 2;
-  else
-    mod = -1;
+	"[tT][rR][iI][gG][gG][eE][rR]_[tT][hH][rR][eE][sS][hH][oO][lL][dD]"))
+		mod = 2;
+	else
+		mod = -1;
 
-  if (mod == 0)
-    {				//ENABLE_INPUT
+	if (mod == 0)
+	{				//ENABLE_INPUT
 
-      punt = FindPointer (punt);
-      if (reg_matches (punt, "[Yy][Ee][Ss]"))
-	{
-	  yes_no = 1;
-	  mioconfig->enable_input = yes_no;
+		punt = FindPointer (punt);
+		if (reg_matches (punt, "[Yy][Ee][Ss]"))
+		{
+			yes_no = 1;
+			mioconfig->enable_input = yes_no;
+		}
+		else if (reg_matches (punt, "[Nn][Oo]"))
+		{
+			yes_no = 0;
+			mioconfig->enable_input = yes_no;
+		}
+
 	}
-      else if (reg_matches (punt, "[Nn][Oo]"))
-	{
-	  yes_no = 0;
-	  mioconfig->enable_input = yes_no;
+
+	else if (mod == 1)
+	{				//DC_OFFSET
+		punt = FindPointer (punt);
+		int dc_offset = strtoul (punt, NULL, 16);
+		mioconfig->dc_offset = dc_offset;
 	}
 
-    }
-
-  else if (mod == 1)
-    {				//DC_OFFSET
-      punt = FindPointer (punt);
-      int dc_offset = strtoul (punt, NULL, 16);
-      mioconfig->dc_offset = dc_offset;
-    }
-
-  else if (mod == 2)
-    {				//TRIGGER_THRESHOLD
-      punt = FindPointer (punt);
-      int trigger_threshold = strtoul (punt, NULL, 16);
-      mioconfig->trigger_threshold = trigger_threshold;
-    }
-
+	else if (mod == 2)
+	{				//TRIGGER_THRESHOLD
+		punt = FindPointer (punt);
+		int trigger_threshold = strtoul (punt, NULL, 16);
+		mioconfig->trigger_threshold = trigger_threshold;
+	}
 }				//END_FUNCTION
 
 //**********************************************
@@ -412,127 +413,123 @@ AllInformation (char *yytext, ConfObject * mioconfig)
 void
 FastInformation (char *yytext, ConfObject * mioconfig)
 {
-  char *punt;
-  int mod;
-  //int yes_no;
-  int fast;
-  fast = FindIntegerValue (yytext);
+	char *punt;
+	int mod;
+	//int yes_no;
+	int fast;
+	fast = FindIntegerValue (yytext);
 
 	if (fast < MAXFASTOBJECT)
+	{
+
+		mioconfig->fasts[fast].set = 1;
+		mioconfig->fasts[fast].numFast = fast + 1;
+
+
+		punt = FindPointer (yytext);
+		punt = FindPointer (punt);
+
+		if (reg_matches (punt, "[dD][cC]_[oO][fF][fF][sS][eE][tT]"))
+			mod = 0;
+		else if (reg_matches
+		(punt,
+		"[tT][rR][iI][gG][gG][eE][rR]_[tT][hH][rR][eE][sS][hH][oO][lL][dD]"))
+			mod = 1;
+		else
+			mod = -1;
+
+		if (mod == 0)
+		{	//DC_OFFSET
+			punt = FindPointer (punt);
+			int dc_offset = strtoul (punt, NULL, 16);
+			mioconfig->fasts[fast].dc_offset = dc_offset;
+		}
+
+		else if (mod == 1)
 		{
-
-  mioconfig->fasts[fast].set = 1;
-  mioconfig->fasts[fast].numFast = fast + 1;
-
-
-  punt = FindPointer (yytext);
-  punt = FindPointer (punt);
-
-  if (reg_matches (punt, "[dD][cC]_[oO][fF][fF][sS][eE][tT]"))
-    mod = 0;
-  else
-    if (reg_matches
-	(punt,
-	 "[tT][rR][iI][gG][gG][eE][rR]_[tT][hH][rR][eE][sS][hH][oO][lL][dD]"))
-    mod = 1;
-  else
-    mod = -1;
-
-  if (mod == 0)
-    {				//DC_OFFSET
-      punt = FindPointer (punt);
-      int dc_offset = strtoul (punt, NULL, 16);
-      mioconfig->fasts[fast].dc_offset = dc_offset;
-    }
-
-  else if (mod == 1)
-    {				//TRIGGER_THRESHOLD
-      punt = FindPointer (punt);
-      int trigger_threshold = strtoul (punt, NULL, 16);
-      mioconfig->fasts[fast].trigger_threshold = trigger_threshold;
-    }
-		} // if (fast < MAXFASTOBJECT)
-
+			//TRIGGER_THRESHOLD
+			punt = FindPointer (punt);
+			int trigger_threshold = strtoul (punt, NULL, 16);
+			mioconfig->fasts[fast].trigger_threshold = trigger_threshold;
+		}
+	} // if (fast < MAXFASTOBJECT)
 }				//END_FUNCTION
 
 void
 ChannelEnableMask (char *yytext, ConfObject * mioconfig)
 {
+	int i;
+	unsigned int bit = 1;
+	unsigned int maschera;
 
-  int i;
-  unsigned int bit = 1;
-  unsigned int maschera;
+	char *punt;
+	int channel_enable_mask;
+	punt = FindPointer (yytext);
+	mioconfig->channel_enable_mask = strtoul (punt, NULL, 16);
 
-  char *punt;
-  int channel_enable_mask;
-  punt = FindPointer (yytext);
-  mioconfig->channel_enable_mask = strtoul (punt, NULL, 16);
-
-  maschera = (unsigned int) mioconfig->channel_enable_mask;
-  for (i = 0; i < MAXCHANNELOBJECT; i++)
-    {
-      if (maschera & bit)
+	maschera = (unsigned int) mioconfig->channel_enable_mask;
+	for (i = 0; i < MAXCHANNELOBJECT; i++)
 	{
-	  mioconfig->channels[i].enable_input = 1;
-	  mioconfig->channels[i].set = 1;
-	  mioconfig->channels[i].numChannel = i;
+		if (maschera & bit)
+		{
+			mioconfig->channels[i].enable_input = 1;
+			mioconfig->channels[i].set = 1;
+			mioconfig->channels[i].numChannel = i;
+		}
+		maschera >>= 1;
 	}
-      maschera >>= 1;
-    }
 }
 
 void
 GroupEnableMask (char *yytext, ConfObject * mioconfig)
 {
+	int i;
+	unsigned int bit = 1;
+	unsigned int maschera;
 
-  int i;
-  unsigned int bit = 1;
-  unsigned int maschera;
+	char *punt;
+	int channel_enable_mask;
+	punt = FindPointer (yytext);
+	mioconfig->group_enable_mask = strtoul (punt, NULL, 16);
 
-  char *punt;
-  int channel_enable_mask;
-  punt = FindPointer (yytext);
-  mioconfig->group_enable_mask = strtoul (punt, NULL, 16);
-
-  maschera = (unsigned int) mioconfig->group_enable_mask;
-  for (i = 0; i < MAXGROUPOBJECT; i++)
-    {
-      if (maschera & bit)
+	maschera = (unsigned int) mioconfig->group_enable_mask;
+	for (i = 0; i < MAXGROUPOBJECT; i++)
 	{
-	  mioconfig->groups[i].enable_input = 1;
-	  mioconfig->groups[i].set = 1;
-	  mioconfig->groups[i].numGroup = i;
+		if (maschera & bit)
+		{
+			mioconfig->groups[i].enable_input = 1;
+			mioconfig->groups[i].set = 1;
+			mioconfig->groups[i].numGroup = i;
+		}
+		maschera >>= 1;
 	}
-      maschera >>= 1;
-    }
 }
 
 void
 ChannelTriggerEnableMask (char *yytext, ConfObject * mioconfig)
 {
+	char *punt;
+	int channel_trigger_enable_mask;
+	punt = FindPointer (yytext);
+	mioconfig->self_trigger_enable_mask = strtoul (punt, NULL, 16);
+	punt = FindPointer (yytext);
 
-  char *punt;
-  int channel_trigger_enable_mask;
-  punt = FindPointer (yytext);
-  mioconfig->self_trigger_enable_mask = strtoul (punt, NULL, 16);
-  punt = FindPointer (yytext);
-
-  if (reg_matches
-      (punt, "[aA][cC][qQ][uU][iI][sS][iI][tT][iI][oO][nN]_[oO][nN][lL][yY]"))
-    {
-      mioconfig->self_trigger_enable_mask_mode = 0;
-    }
-  else
-    if (reg_matches
+	if (reg_matches
+	(punt, "[aA][cC][qQ][uU][iI][sS][iI][tT][iI][oO][nN]_[oO][nN][lL][yY]"))
+	{
+		mioconfig->self_trigger_enable_mask_mode = 0;
+	}
+	else
+	if (reg_matches
 	(punt,
-	 "[aA][cC][qQ][uU][iI][sS][iI][tT][iI][oO][nN]_[aA][nN][dD]_[tT][rR][gG][oO][uU][tT]"))
-    {
-      mioconfig->self_trigger_enable_mask_mode = 1;
-    }
-  else if (reg_matches (punt, "[dD][iI][sS][aA][bB][lL][eE][dD]"))
-    {
-      mioconfig->self_trigger_enable_mask_mode = 2;
-    }
+	"[aA][cC][qQ][uU][iI][sS][iI][tT][iI][oO][nN]_[aA][nN][dD]_[tT][rR][gG][oO][uU][tT]"))
+	{
+		mioconfig->self_trigger_enable_mask_mode = 1;
+	}
+	else if (reg_matches (punt, "[dD][iI][sS][aA][bB][lL][eE][dD]"))
+	{
+		mioconfig->self_trigger_enable_mask_mode = 2;
+	}
 }
 
 
@@ -563,5 +560,4 @@ void WriteRegister(char *yytext, ConfObject *mioconfig)
     mioconfig->registers[i].address = registerAddress;
     mioconfig->registers[i].data = registerData;
     //std::cout << "Settato registro " << registerAddress << " al valore " << registerData << std::endl;
-
 }

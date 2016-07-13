@@ -37,78 +37,78 @@ mutex OutputModule::mtx_constructor;
 OutputModule *
 OutputModule::Instance ()
 {
-  mtx_constructor.lock();	
- 
-  if (!outputmodule_pInstance)	// Only allow one instance of class to be generated.
-    outputmodule_pInstance = new OutputModule ();
+	mtx_constructor.lock();	
 
-  mtx_constructor.unlock();  
+	if (!outputmodule_pInstance)	// Only allow one instance of class to be generated.
+		outputmodule_pInstance = new OutputModule ();
 
-  return outputmodule_pInstance;
+	mtx_constructor.unlock();  
+
+	return outputmodule_pInstance;
 }
 
 OutputModule::OutputModule ()
 {
-  OutputModule::OutputModuleSockidOff();
-  OutputModule::OutputModuleStdoutOn();
+	OutputModule::OutputModuleSockidOff();
+	OutputModule::OutputModuleStdoutOn();
 
-  bzero (buffer, STANDARDBUFFERLIMIT);
+	bzero (buffer, STANDARDBUFFERLIMIT);
 
-  int i;
-  for (i = 0; i < 100; i++)
-    sockid_array[i] = -1;
+	int i;
+	for (i = 0; i < 100; i++)
+		sockid_array[i] = -1;
 }
 
 void
 OutputModule::StdOutInsert (const char *string)
 {
-  bzero (buffer, STANDARDBUFFERLIMIT);
-  strncpy (buffer, string, STANDARDBUFFERLIMIT);
+	bzero (buffer, STANDARDBUFFERLIMIT);
+	strncpy (buffer, string, STANDARDBUFFERLIMIT);
 }
 
 void
 OutputModule::StdOutInsertLex (char *string, int length)
 {
-  bzero (buffer, STANDARDBUFFERLIMIT);
-  strncpy (buffer, string, STANDARDBUFFERLIMIT);
+	bzero (buffer, STANDARDBUFFERLIMIT);
+	strncpy (buffer, string, STANDARDBUFFERLIMIT);
 }
 
 void
 OutputModule::StdOutPrint ()
 {
-  output_module_application_setup = ApplicationSetup::Instance ();
+	output_module_application_setup = ApplicationSetup::Instance ();
 
-//fprintf(stderr, "Codice dell'ultimo carattere: %d\n", buffer[strlen(buffer)-1]);
+	//fprintf(stderr, "Codice dell'ultimo carattere: %d\n", buffer[strlen(buffer)-1]);
 
-  if ((output_module_application_setup->input_mode == 2
-       || output_module_application_setup->input_mode == 0)
-      && output_module_stdout == 1)
-    {
-      //if (buffer[strlen(buffer)-1] == 10)
-      fprintf (stdout, "%s", buffer);
-      //else if(buffer[strlen(buffer)-1] != 10){
-      //      fprintf(stdout, "%s", buffer);
-      //if (strlen(buffer) > 1) fprintf (stdout, "\n");
-      //}
-    }
+	if ((output_module_application_setup->input_mode == 2
+	|| output_module_application_setup->input_mode == 0)
+	&& output_module_stdout == 1)
+	{
+		//if (buffer[strlen(buffer)-1] == 10)
+		fprintf (stdout, "%s", buffer);
+		//else if(buffer[strlen(buffer)-1] != 10){
+		//      fprintf(stdout, "%s", buffer);
+		//if (strlen(buffer) > 1) fprintf (stdout, "\n");
+		//}
+	}
 }  //void OutputModule::StdOutPrint()
 
 int
 OutputModule::TcpUserArrayInsert (int sockid)
 {
-  mtx_output.lock();	
-  int i;
-  for (i = 0; i < 100; i++)
-    {
-      if (sockid_array[i] == -1)
+	mtx_output.lock();	
+	int i;
+	for (i = 0; i < 100; i++)
 	{
-	  sockid_array[i] = sockid;
-	  mtx_output.unlock();  	  
-	  return 0;
+		if (sockid_array[i] == -1)
+		{
+			sockid_array[i] = sockid;
+			mtx_output.unlock();  	  
+			return 0;
+		}
 	}
-    }
-  mtx_output.unlock();      
-  return 1;
+	mtx_output.unlock();      
+	return 1;
 }  //int OutputModule::TcpUserArrayInsert(int sockid)
 
 
@@ -116,91 +116,91 @@ OutputModule::TcpUserArrayInsert (int sockid)
 int
 OutputModule::TcpUserArrayDelete (int sockid)
 {
-  mtx_output.lock();		
-  int i;
-  for (i = 0; i < 100; i++)
-    {
-      if (sockid_array[i] == sockid)
+	mtx_output.lock();		
+	int i;
+	for (i = 0; i < 100; i++)
 	{
-	  sockid_array[i] = -1;
-	  mtx_output.unlock();
-	  return 0;
+		if (sockid_array[i] == sockid)
+		{
+			sockid_array[i] = -1;
+			mtx_output.unlock();
+			return 0;
+		}
 	}
-    }
-  mtx_output.unlock();    
-  return 1;
+	mtx_output.unlock();    
+	return 1;
 }  //int OutputModule::TcpUserArrayDelete(int sockid)
 
 
 int
 OutputModule::TcpUserArraySendStdOut ()
 {
-  int i;
-  output_module_application_setup = ApplicationSetup::Instance ();
+	int i;
+	output_module_application_setup = ApplicationSetup::Instance ();
 
-  if (output_module_application_setup->input_mode == 2
-      || output_module_application_setup->input_mode == 1)
-    {
-      for (i = 0; i < 100; i++)
+	if (output_module_application_setup->input_mode == 2
+	|| output_module_application_setup->input_mode == 1)
 	{
-	  if (sockid_array[i] > -1
-	      && sockid_array[i] == output_module_sockid)
-	    {
-	      send (sockid_array[i], buffer, STANDARDBUFFERLIMIT, MSG_NOSIGNAL);	//usleep(5000); 
-	    }	//if(sockid_array[i]>-1)
-	}   //for(i=0; i<100; i++)
-    }
+		for (i = 0; i < 100; i++)
+		{
+			if (sockid_array[i] > -1
+			  && sockid_array[i] == output_module_sockid)
+			{
+				send (sockid_array[i], buffer, STANDARDBUFFERLIMIT, MSG_NOSIGNAL);	//usleep(5000); 
+			}	//if(sockid_array[i]>-1)
+		}   //for(i=0; i<100; i++)
+	}
 
-  return 0;
+	return 0;
 }   //int OutputModule::TcpUserArraySendStdOut(StdOut * stdout_arg)
 
- void OutputModule::Output(const char * string){
-
-mtx_output.lock();
-OutputModule::StdOutInsert (string); 
-OutputModule::StdOutPrint(); 
-OutputModule::TcpUserArraySendStdOut ();
-mtx_output.unlock();
-
+void OutputModule::Output(const char * string)
+{
+	mtx_output.lock();
+	OutputModule::StdOutInsert (string); 
+	OutputModule::StdOutPrint(); 
+	OutputModule::TcpUserArraySendStdOut ();
+	mtx_output.unlock();
 }
 
 
 void OutputModule::OutputFlex(const char * string, int length)
 {
-mtx_output.lock();	
-char * new_line_string = (char*)malloc(length+1); 
-strcpy(new_line_string, string); 
-new_line_string[length] = new_line_string[length -1]; 
-new_line_string[length -1] = '\n'; 
-OutputModule::StdOutInsertLex(new_line_string, length); 
-usleep(5000); 
-OutputModule::StdOutPrint(); 
-OutputModule::TcpUserArraySendStdOut(); 
-free(new_line_string);
-mtx_output.unlock();
+	mtx_output.lock();	
+	char * new_line_string = (char*)malloc(length+1); 
+	strcpy(new_line_string, string); 
+	new_line_string[length] = new_line_string[length -1]; 
+	new_line_string[length -1] = '\n'; 
+	OutputModule::StdOutInsertLex(new_line_string, length); 
+	usleep(5000); 
+	OutputModule::StdOutPrint(); 
+	OutputModule::TcpUserArraySendStdOut(); 
+	free(new_line_string);
+	mtx_output.unlock();
 }
 
 void OutputModule::OutputModuleStdoutOn(){
-mtx_output.lock();
-output_module_stdout = 1;
-mtx_output.unlock();
+	mtx_output.lock();
+	output_module_stdout = 1;
+	mtx_output.unlock();
 }
 
 void OutputModule::OutputModuleStdoutOff(){
-mtx_output.lock();
-output_module_stdout = -1;
-mtx_output.unlock();
+	mtx_output.lock();
+	output_module_stdout = -1;
+	mtx_output.unlock();
 }
 
 void OutputModule::OutputModuleSockidOn(int sockid)
 {
-mtx_output.lock();	
-output_module_sockid = sockid;
-mtx_output.unlock();
+	mtx_output.lock();	
+	output_module_sockid = sockid;
+	mtx_output.unlock();
 }
 
-void OutputModule::OutputModuleSockidOff(){
-mtx_output.lock();
-output_module_sockid = -1;
-mtx_output.unlock();
+void OutputModule::OutputModuleSockidOff()
+{
+	mtx_output.lock();
+	output_module_sockid = -1;
+	mtx_output.unlock();
 }
