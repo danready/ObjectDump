@@ -173,12 +173,12 @@ DigitizerFlowControl::DigitizerFlowControlStart ()
 //E' stampata una stringa che scrive l'input ricevuto e il sockid di chi l'ha inviato. 
 //Questo avviene solo se il programma e' lanciato in modalita' -m all: se e' lanciato in modalita' -m tcp, esso e' eseguito in modalita' demone.
 //Di conseguenza, in quest'ultimo caso non stampa niente a video.
-	      fprintf (stdout, "Command sent by user %d: %d which means %s\n",
-		       command_received_by_user.user_sockid,
-		       command_received_by_user.command_sent_by_user,
-		       DigitizerFlowControl::
-		       ParseCommand (command_received_by_user.
-				     command_sent_by_user));
+	      //~ fprintf (stdout, "Command sent by user %d: %d which means %s\n",
+		       //~ command_received_by_user.user_sockid,
+		       //~ command_received_by_user.command_sent_by_user,
+		       //~ DigitizerFlowControl::
+		       //~ ParseCommand (command_received_by_user.
+		  		     //~ command_sent_by_user));
 
 	      ///////Armo output_module///////
 	      output_module->OutputModuleStdoutOff();

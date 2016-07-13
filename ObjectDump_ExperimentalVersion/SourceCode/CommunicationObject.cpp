@@ -67,6 +67,13 @@ CommunicationObject::Main ()
   server.sin_addr.s_addr = inet_addr(SERVERIP);
   server.sin_port = htons (SERVERPORT);
 
+  int flag1 = 1;
+  int result1 = setsockopt(client_sock,   /* socket affected */
+                        IPPROTO_TCP,     /* set option at TCP level */
+                        TCP_NODELAY,     /* name of option */
+                        (char *) &flag1,  /* the cast is historical cruft */
+                        sizeof(int));    /* length of option value */
+
   /*Effettuo il bind */
   bind (socket_desc, (struct sockaddr *) &server, sizeof (server));
 
@@ -84,6 +91,13 @@ CommunicationObject::Main ()
 
       client_sock =
 	accept (socket_desc, (struct sockaddr *) &client, (socklen_t *) & c);
+
+   int flag = 1;
+   int result = setsockopt(client_sock,  /* socket affected */
+                        IPPROTO_TCP,     /* set option at TCP level */
+                        TCP_NODELAY,     /* name of option */
+                        (char *) &flag,  /* the cast is historical cruft */
+                        sizeof(int));    /* length of option value */
 
       if (go == 0)
 	{
@@ -146,8 +160,8 @@ CommunicationObject::Worker (void *socket_desc)
 	  bzero (command[coda].first_parameter, STANDARDBUFFERLIMIT);
 	  my_punt = buffer + 4;
 	  strncpy (command[coda].first_parameter, my_punt, STANDARDBUFFERLIMIT - 1);
-	  fprintf (stderr, "command[coda].first_parameter: %s\n",
-		   command[coda].first_parameter);
+	  //~ fprintf (stderr, "command[coda].first_parameter: %s\n",
+	  	   //~ command[coda].first_parameter);
 	}
 
       command[coda].user_sockid = sock;
