@@ -87,7 +87,6 @@ ApplicationSetup::ApplicationSetup ()
 void
 ApplicationSetup::ApplicationSetupSet (int argc_arg, char **argv_arg)
 {
-	mtx_output.lock();	
 
 	int i;
 	argc = argc_arg;
@@ -100,7 +99,6 @@ ApplicationSetup::ApplicationSetupSet (int argc_arg, char **argv_arg)
 	ApplicationSetup::ArgumentsParsing ();
 	ApplicationSetup::FetchInputMode (application_setup_input_mode);
 
-	mtx_output.unlock();  
 }
 
 

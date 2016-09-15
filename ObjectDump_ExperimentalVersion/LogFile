@@ -1,6 +1,2 @@
-Wed Jul 13 09:42:35 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectOpen Line: 112 ErrorCode: -1 Communication error
-Wed Jul 13 09:42:35 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectReset Line: 125 ErrorCode:-5 Invalid device handler
-Wed Jul 13 09:42:35 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectGetInfo Line: 136 ErrorCode:-5 Invalid device handler
-File: ./SourceCode/DigitizerObject.cpp, Function PrintBoardInfo, Line: 195, Error: can't print board info. Use DigitizerObject::DigitizerObjectgetinfo first. Perhaps you have not open the digitizer?
-Wed Jul 13 09:42:48 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectSWStopAcquisition Line: 454 ErrorCode:-5 Invalid device handler
-Wed Jul 13 09:42:48 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectClose Line: 404 ErrorCode:-5 Invalid device handler
+Thu Sep 15 12:10:29 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectSWStopAcquisition Line: 453 ErrorCode:-5 Invalid device handler
+Thu Sep 15 12:10:29 2016 File: ./SourceCode/DigitizerObject.cpp Function: DigitizerObjectClose Line: 403 ErrorCode:-5 Invalid device handler
